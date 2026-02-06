@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Surprise 💖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    transition: background 1s ease;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Glass container */
+  .container {
+    text-align: center;
+    padding: 50px 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 0 30px rgba(255,105,180,0.5);
+    animation: glow 2s infinite alternate;
+    width: 90%;
+    max-width: 450px;
+    z-index: 1;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #ffffff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #ccc;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: white;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff6699, 0 0 30px #ff1493;
+  }
+
+  .yes { background: linear-gradient(45deg, #ff6699, #ff1493); }
+
+  #result {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    animation: fadein 1s ease forwards;
+    display: none;
+    line-height: 1.6;
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #ff0066;
+    transform: rotate(45deg);
+    left: 50%;
+    bottom: 0;
+    animation: float 4s linear infinite;
+    z-index: 0;
+  }
+
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #ff0066;
+    border-radius: 50%;
+  }
+
+  .heart::before { top: -10px; left: 0; }
+  .heart::after { left: 10px; top: 0; }
+
+  @keyframes float {
+    0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1; }
+    100% { transform: translateX(-100px) translateY(-600px) rotate(45deg); opacity: 0; }
+  }
+
+  @keyframes glow {
+    0% { box-shadow: 0 0 10px rgba(255,105,180,0.5); }
+    100% { box-shadow: 0 0 30px rgba(255,105,180,0.8); }
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ff6699;
+    top: 0;
+    left: 50%;
+    opacity: 0.7;
+    z-index: 0;
+    animation: confetti-fall linear forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity:1; }
+    100% { transform: translateY(600px) rotate(360deg); opacity:0; }
+  }
+
+  @media (max-width: 500px) {
+    h1 { font-size: 2rem; }
+    button { padding: 12px 25px; font-size: 1rem; }
+    .container { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Do You Love Me? 💖</h1>
+  <div class="buttons">
+    <button class="yes" onclick="showMessage()">Yes</button>
+  </div>
+  <div id="result"></div>
+</div>
+
+<audio id="romanticMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"></audio>
+<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+<script>
+  const yesMessages = [
+    {msg: "You are my everything, forever and always 💖", bg: "#ff0066"},
+    {msg: "My heart belongs to you and only you 💘", bg: "#ff3366"},
+    {msg: "You make my world brighter every day ✨", bg: "#ff6699"},
+    {msg: "I want to hold your hand forever 💞", bg: "#ff3399"},
+    {msg: "Being loved by you is my favorite feeling 💗", bg: "#ff66cc"},
+    {msg: "You are my dream come true 💓", bg: "#ff3366"},
+    {msg: "My heart beats only for you 😍", bg: "#ff3399"},
+    {msg: "You complete my life in every way 💖", bg: "#ff6699"},
+    {msg: "I love you more than words can ever express 💞", bg: "#ff0066"}
+  ];
+
+  function showMessage() {
+    const obj = yesMessages[Math.floor(Math.random() * yesMessages.length)];
+    const result = document.getElementById('result');
+
+    result.style.display = "block";
+    result.textContent = obj.msg;
+    document.body.style.background = obj.bg;
+
+    createHearts();
+    createConfetti();
+
+    const romantic = document.getElementById('romanticMusic');
+    romantic.currentTime = 0;
+    romantic.play();
+
+    const clickSound = document.getElementById('clickSound');
+    clickSound.currentTime = 0;
+    clickSound.play();
+  }
+
+  function createHearts() {
+    for(let i=0;i<15;i++){
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random()*100 + 'vw';
+      heart.style.animationDuration = 2 + Math.random()*3 + 's';
+      heart.style.width = 15 + Math.random()*20 + 'px';
+      heart.style.height = heart.style.width;
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),5000);
+    }
+  }
+
+  function createConfetti() {
+    for(let i=0;i<50;i++){
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random()*100 + 'vw';
+      confetti.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
+      confetti.style.width = 5 + Math.random()*10 + 'px';
+      confetti.style.height = confetti.style.width;
+      confetti.style.animationDuration = 3 + Math.random()*3 + 's';
+      document.body.appendChild(confetti);
+      setTimeout(()=>confetti.remove(),4000);
+    }
+  }
+</script>
+
+</body>
+</html>
